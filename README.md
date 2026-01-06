@@ -1,2 +1,2 @@
-# AMC_KONE_-1-
+# AMC_KONE_1
 App for the maintenance 
