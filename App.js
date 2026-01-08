@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
-/*
-  SCREENS:
-  splash
-  login
-  dashboard
-  elevator
-  floor
-  report
-  kmp
-*/
+import SplashScreen from './SplashScreen';
+import LoginScreen from './LoginScreen';
+import DashboardScreen from './DashboardScreen';
+import ElevatorDetailScreen from './ElevatorDetailScreen';
+import FloorMaintenanceScreen from './FloorMaintenanceScreen';
+import MovementHeatMapScreen from './MovementHeatMapScreen';
+import ReportSummaryScreen from './ReportSummaryScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
+
   const [selectedElevator, setSelectedElevator] = useState(null);
   const [selectedFloor, setSelectedFloor] = useState(null);
+  const [lastReport, setLastReport] = useState(null);
 
-  // Simple screen switcher
   const renderScreen = () => {
     switch (currentScreen) {
       case 'splash':
@@ -41,6 +39,10 @@ export default function App() {
               setSelectedElevator(elv);
               setCurrentScreen('elevator');
             }}
+            onOpenKMP={() => alert('KMP screen next')}
+            onOpenMap={() => alert('Map screen next')}
+            onOpenIssues={() => alert('Issues screen next')}
+            onOpenReports={() => setCurrentScreen('report')}
           />
         );
 
@@ -61,143 +63,44 @@ export default function App() {
           <FloorMaintenanceScreen
             elevator={selectedElevator}
             floor={selectedFloor}
-            onFinish={() => setCurrentScreen('report')}
+            onFinish={(data) => {
+              setLastReport(data);
+              setCurrentScreen('report');
+            }}
             onBack={() => setCurrentScreen('elevator')}
+          />
+        );
+
+      case 'heatmap':
+        return (
+          <MovementHeatMapScreen
+            onBack={() => setCurrentScreen('floor')}
           />
         );
 
       case 'report':
         return (
-          <ReportScreen
+          <ReportSummaryScreen
+            reportData={lastReport}
             onBackToHome={() => setCurrentScreen('dashboard')}
           />
         );
 
       default:
-        return <Text>Unknown Screen</Text>;
+        return null;
     }
   };
 
-  return <View style={styles.appContainer}>{renderScreen()}</View>;
-}
-
-/* ------------------ PLACEHOLDER SCREENS ------------------ */
-/* These will be replaced one by one in next steps */
-
-function SplashScreen({ onFinish }) {
   return (
-    <View style={styles.center}>
-      <Text style={styles.title}>KONE</Text>
-      <Pressable style={styles.button} onPress={onFinish}>
-        <Text style={styles.buttonText}>Start</Text>
-      </Pressable>
+    <View style={styles.container}>
+      {renderScreen()}
     </View>
   );
 }
-
-function LoginScreen({ onLoginSuccess }) {
-  return (
-    <View style={styles.center}>
-      <Text style={styles.title}>Login</Text>
-      <Pressable style={styles.button} onPress={onLoginSuccess}>
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function DashboardScreen({ onSelectElevator }) {
-  return (
-    <View style={styles.center}>
-      <Text style={styles.title}>Dashboard</Text>
-      <Pressable
-        style={styles.button}
-        onPress={() => onSelectElevator('ELV-001')}
-      >
-        <Text style={styles.buttonText}>Open Elevator ELV-001</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function ElevatorDetailScreen({ elevator, onSelectFloor, onBack }) {
-  return (
-    <View style={styles.center}>
-      <Text style={styles.title}>Elevator {elevator}</Text>
-      <Pressable
-        style={styles.button}
-        onPress={() => onSelectFloor(7)}
-      >
-        <Text style={styles.buttonText}>Go to Floor 7</Text>
-      </Pressable>
-
-      <Pressable style={styles.link} onPress={onBack}>
-        <Text>⬅ Back</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function FloorMaintenanceScreen({ elevator, floor, onFinish, onBack }) {
-  return (
-    <View style={styles.center}>
-      <Text style={styles.title}>
-        {elevator} – Floor {floor}
-      </Text>
-
-      <Pressable style={styles.button} onPress={onFinish}>
-        <Text style={styles.buttonText}>End Maintenance</Text>
-      </Pressable>
-
-      <Pressable style={styles.link} onPress={onBack}>
-        <Text>⬅ Back</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function ReportScreen({ onBackToHome }) {
-  return (
-    <View style={styles.center}>
-      <Text style={styles.title}>Report Generated</Text>
-
-      <Pressable style={styles.button} onPress={onBackToHome}>
-        <Text style={styles.buttonText}>Back to Dashboard</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-/* ------------------ STYLES ------------------ */
 
 const styles = StyleSheet.create({
-  appContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#0071CE',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  link: {
-    marginTop: 20,
+    backgroundColor: '#ffffff',
   },
 });
