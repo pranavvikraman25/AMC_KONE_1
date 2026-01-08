@@ -42,13 +42,18 @@ function NavButton({ label, onPress }) {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    bottom: 12,            // 👈 lifts above system buttons
+    left: 10,
+    right: 10,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderColor: '#ddd',
     paddingVertical: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    elevation: 8,          // 👈 Android shadow
+    zIndex: 100,           // 👈 ensures clicks work
   },
   navBtn: {
     padding: 8,
@@ -59,16 +64,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   addBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#0071CE',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: -24,        // 👈 floating "+"
   },
   addText: {
     color: '#fff',
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
   },
 });
