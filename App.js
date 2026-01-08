@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import SplashScreen from './SplashScreen';
-import LoginScreen from './LoginScreen';
-import DashboardScreen from './DashboardScreen';
-import ElevatorDetailScreen from './ElevatorDetailScreen';
-import FloorMaintenanceScreen from './FloorMaintenanceScreen';
-import MovementHeatMapScreen from './MovementHeatMapScreen';
-import ReportSummaryScreen from './ReportSummaryScreen';
+import SplashScreen from './screens/SplashScreen';
+import LoginScreen from './screens/LoginScreen';
+import DashboardScreen from './screens/DashboardScreen';
+import ElevatorDetailScreen from './screens/ElevatorDetailScreen';
+import FloorMaintenanceScreen from './screens/FloorMaintenanceScreen';
+import MovementHeatMapScreen from './screens/MovementHeatMapScreen';
+import ReportSummaryScreen from './screens/ReportSummaryScreen';
+
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
