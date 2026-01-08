@@ -42,8 +42,9 @@ export default function DashboardScreen({
   return (
     <View style={styles.container}>
       {/* HEADER */}
+    <View style={styles.header}>
       <Text style={styles.header}>Elevators</Text>
-
+    </view>
       {/* ELEVATOR LIST */}
       <FlatList
         data={elevators}
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     paddingTop: 40,
+    paddingBottom: 90,
   },
   header: {
     fontSize: 22,
