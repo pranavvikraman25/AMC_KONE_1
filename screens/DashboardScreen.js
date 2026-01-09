@@ -42,11 +42,13 @@ export default function DashboardScreen({
   return (
     <View style={styles.container}>
       {/* HEADER */}
-    <View style={styles.header}>
-      <Text style={styles.header}>Elevators</Text>
-    </view>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Elevators</Text>
+      </View>
+
       {/* ELEVATOR LIST */}
       <FlatList
+        contentContainerStyle={{ paddingBottom: 120 }}
         data={elevators}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -110,7 +112,7 @@ export default function DashboardScreen({
   );
 }
 
-/* ---------- Small reusable button ---------- */
+/* ---------- Bottom Nav Button ---------- */
 function NavButton({ label, onPress }) {
   return (
     <Pressable style={styles.navBtn} onPress={onPress}>
@@ -125,16 +127,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-    paddingTop: 40,
-    paddingBottom: 90,
   },
+
+  /* Header */
   header: {
+    paddingTop: 50,
+    paddingBottom: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#ffffff',
+  },
+  headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#0071CE',
-    paddingHorizontal: 20,
-    marginBottom: 10,
   },
+
+  /* Cards */
   card: {
     backgroundColor: '#f5f7fa',
     marginHorizontal: 20,
@@ -152,14 +160,19 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  /* Bottom Nav */
+  /* Bottom Nav (FIXED & CLICKABLE) */
   bottomNav: {
+    position: 'absolute',
+    bottom: 12,
+    left: 10,
+    right: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    backgroundColor: '#ffffff',
     paddingVertical: 10,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
+    borderRadius: 16,
+    elevation: 8,
   },
   navBtn: {
     padding: 8,
@@ -167,18 +180,20 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 12,
     color: '#0071CE',
+    fontWeight: '600',
   },
   addBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#0071CE',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: -24,
   },
   addBtnText: {
     color: '#fff',
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
   },
 
