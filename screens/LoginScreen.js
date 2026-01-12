@@ -8,8 +8,8 @@ import {
   Alert,
 } from 'react-native';
 
-const VALID_EMAIL = 'pranav1234@kone.com';
-const VALID_PASSWORD = 'pranavonkone';
+const VALID_EMAIL = 'kone';
+const VALID_PASSWORD = 'kone';
 
 export default function LoginScreen({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
