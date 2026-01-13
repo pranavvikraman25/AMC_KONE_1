@@ -5,13 +5,15 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
-import { Accelerometer } from 'expo-sensors';
+
+import useAccelerometer from '../hooks/useAccelerometer';
+import { classifyZone } from '../utils/zoneClassifier';
 
 /*
   Props expected:
   - elevator : string
   - floor    : number
-  - onFinish : function()
+  - onFinish : function(report)
   - onBack   : function()
 */
 
@@ -23,12 +25,16 @@ export default function FloorMaintenanceScreen({
 }) {
   const [running, setRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
-  const [stationarySeconds, setStationarySeconds] = useState(0);
-  const [movementState, setMovementState] = useState('Idle');
 
   const timerRef = useRef(null);
-  const accelRef = useRef(null);
-  const lastAccel = useRef({ x: 0, y: 0, z: 0 });
+
+  // 🔴 SENSOR HOOK (single source of truth)
+  const {
+    movementState,
+    stationarySeconds,
+    trajectory,
+    reset,
+  } = useAccelerometer(running);
 
   /* ---------- TIMER ---------- */
   useEffect(() => {
@@ -43,31 +49,6 @@ export default function FloorMaintenanceScreen({
     return () => clearInterval(timerRef.current);
   }, [running]);
 
-  /* ---------- ACCELEROMETER ---------- */
-  useEffect(() => {
-    if (!running) return;
-
-    Accelerometer.setUpdateInterval(500);
-
-    accelRef.current = Accelerometer.addListener((data) => {
-      const diff =
-        Math.abs(data.x - lastAccel.current.x) +
-        Math.abs(data.y - lastAccel.current.y) +
-        Math.abs(data.z - lastAccel.current.z);
-
-      if (diff < 0.08) {
-        setMovementState('Stationary');
-        setStationarySeconds((prev) => prev + 1);
-      } else {
-        setMovementState('Moving');
-      }
-
-      lastAccel.current = data;
-    });
-
-    return () => accelRef.current && accelRef.current.remove();
-  }, [running]);
-
   /* ---------- HELPERS ---------- */
   const formatTime = (totalSeconds) => {
     const min = Math.floor(totalSeconds / 60);
@@ -77,18 +58,30 @@ export default function FloorMaintenanceScreen({
 
   const startMaintenance = () => {
     setSeconds(0);
-    setStationarySeconds(0);
+    reset();
     setRunning(true);
   };
 
   const endMaintenance = () => {
     setRunning(false);
-    onFinish && onFinish({
+
+    const inferredZone = classifyZone(trajectory);
+
+    const report = {
       elevator,
       floor,
+      faultCode: '0021',
       totalTime: seconds,
       stationaryTime: stationarySeconds,
-    });
+      inferredZone,
+      trajectory,
+      confidence: trajectory.length > 50 ? 'High' : 'Medium',
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log('MAINTENANCE REPORT:', report);
+
+    onFinish && onFinish(report);
   };
 
   return (
@@ -103,7 +96,7 @@ export default function FloorMaintenanceScreen({
         </Text>
       </View>
 
-      {/* STATUS */}
+      {/* STATUS CARDS */}
       <View style={styles.card}>
         <Text style={styles.label}>Total Time</Text>
         <Text style={styles.value}>{formatTime(seconds)}</Text>
@@ -130,7 +123,12 @@ export default function FloorMaintenanceScreen({
         </Text>
       </View>
 
-      {/* ACTION BUTTONS */}
+      <View style={styles.card}>
+        <Text style={styles.label}>Captured Samples</Text>
+        <Text style={styles.value}>{trajectory.length}</Text>
+      </View>
+
+      {/* ACTION BUTTON */}
       {!running ? (
         <Pressable
           style={[styles.button, styles.startBtn]}
