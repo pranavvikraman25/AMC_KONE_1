@@ -1,12 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-/*
-  Props:
-  - id        : string (ELV-001)
-  - location  : string
-  - onPress   : function
-*/
 
 export default function ElevatorCard({ id, location, onPress }) {
   return (
