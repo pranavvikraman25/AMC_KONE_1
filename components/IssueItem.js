@@ -1,11 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-/*
-  Props:
-  - title   : string
-  - status  : 'open' | 'resolved' (optional)
-*/
 
 export default function IssueItem({ title, status = 'open' }) {
   return (
