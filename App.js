@@ -9,7 +9,6 @@ import FloorMaintenanceScreen from './screens/FloorMaintenanceScreen';
 import MovementHeatMapScreen from './screens/MovementHeatMapScreen';
 import ReportSummaryScreen from './screens/ReportSummaryScreen';
 
-
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
 
@@ -25,7 +24,6 @@ export default function App() {
             onFinish={() => setCurrentScreen('login')}
           />
         );
-
       case 'login':
         return (
           <LoginScreen
